@@ -45,38 +45,41 @@ pageextension 50120 CustomerListExt extends "Customer List"
         Rel: Record "Contact Business Relation";
     begin
         //.DeleteAll();
-        Data := rest.GetAsJson('https://randomuser.me/api/?results=1000').AsObject();
+        repeat
+            Data := rest.GetAsJson('https://randomuser.me/api/?results=1000').AsObject();
 
-        Results := JSONTools.GetArray(Data, 'results');
+            Results := JSONTools.GetArray(Data, 'results');
 
-        foreach T in results do begin
-            Person := T.AsObject();
+            foreach T in results do begin
+                Person := T.AsObject();
 
-            Customer.Init();
-            Customer."No." := '';
-            Customer.Insert(true);
-            // Extract sub json structures
-            Name := JSONTools.GetObj(Person, 'name');
-            Location := JSONTools.GetObj(Person, 'location');
-            Street := JSONTools.GetObj(Location, 'street');
+                Customer.Init();
+                Customer."No." := '';
+                Customer.Insert(true);
+                // Extract sub json structures
+                Name := JSONTools.GetObj(Person, 'name');
+                Location := JSONTools.GetObj(Person, 'location');
+                Street := JSONTools.GetObj(Location, 'street');
 
-            Customer.Validate(Name, JSONTools.GetText(Name, 'first') + ' ' + JSONTools.GetText(Name, 'last'));
-            Customer.Validate(Address, JSONTools.GetText(Street, 'name') + ' ' + JSONTools.GetText(Street, 'number'));
-            Customer.City := copystr(JSONTools.GetText(Location, 'city'), 1, MaxStrLen(Customer.City));
-            Customer."Post Code" := JSONTools.GetText(Location, 'postcode');
-            Customer.County := JSONTools.GetText(Location, 'state');
-            //Customer."Country/Region Code"
-            Customer."E-Mail" := JSONTools.GetText(Person, 'email');
-            //Customer."Country/Region Code" := JSONTools.GetText(Person, 'country');
-            Country.Setfilter(Name, '@*' + JSONTools.GetText(Location, 'country') + '*');
-            if not Country.FindFirst() then begin
-                Country.Init();
-                Country.Code := copystr(JSONTools.GetText(Location, 'country'), 1, MaxStrLen(Country.Code));
-                Country.Name := copystr(JSONTools.GetText(Location, 'country'), 1, MaxStrLen(Country.Name));
-                Country.Insert();
-            end else
-                Customer.Validate("Country/Region Code", Country.Code);
-            Customer.Modify(true);
-        end;
+                Customer.Validate(Name, JSONTools.GetText(Name, 'first') + ' ' + JSONTools.GetText(Name, 'last'));
+                Customer.Validate(Address, JSONTools.GetText(Street, 'name') + ' ' + JSONTools.GetText(Street, 'number'));
+                Customer.City := copystr(JSONTools.GetText(Location, 'city'), 1, MaxStrLen(Customer.City));
+                Customer."Post Code" := JSONTools.GetText(Location, 'postcode');
+                Customer.County := JSONTools.GetText(Location, 'state');
+                //Customer."Country/Region Code"
+                Customer."E-Mail" := JSONTools.GetText(Person, 'email');
+                //Customer."Country/Region Code" := JSONTools.GetText(Person, 'country');
+                Country.Setfilter(Name, '@*' + JSONTools.GetText(Location, 'country') + '*');
+                if not Country.FindFirst() then begin
+                    Country.Init();
+                    Country.Code := copystr(JSONTools.GetText(Location, 'country'), 1, MaxStrLen(Country.Code));
+                    Country.Name := copystr(JSONTools.GetText(Location, 'country'), 1, MaxStrLen(Country.Name));
+                    Country.Insert();
+                end else
+                    Customer.Validate("Country/Region Code", Country.Code);
+                Customer.Modify(false);
+                commit();
+            end;
+        until false;
     end;
 }

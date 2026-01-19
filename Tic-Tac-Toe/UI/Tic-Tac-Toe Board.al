@@ -94,7 +94,7 @@ page 54500 "Tic-Tac-Toe"
                     if LastClicked = 0 then begin
                         LastClicked := Engine.UserClicked(Rec, Control);
                         if LastClicked > 0 then
-                            CurrPage.HTML.StartTimer(500);
+                            CurrPage.HTML.StartTimer(1000);
                         CalcScoreInfo := '';
                     end;
                 end;
