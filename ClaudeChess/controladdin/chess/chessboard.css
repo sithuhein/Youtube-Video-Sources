@@ -1,0 +1,169 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+#chess-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 10px;
+    user-select: none;
+}
+
+#chess-board {
+    display: grid;
+    grid-template-columns: repeat(8, 64px);
+    grid-template-rows: repeat(8, 64px);
+    border: 3px solid #333;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.square {
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 42px;
+    cursor: pointer;
+    position: relative;
+    transition: background-color 0.1s;
+}
+
+.square-light {
+    background-color: #f0d9b5;
+}
+
+.square-dark {
+    background-color: #b58863;
+}
+
+.square.selected {
+    background-color: #ffff66 !important;
+}
+
+.square.last-move {
+    background-color: #cdd26a !important;
+}
+
+.square.in-check {
+    background-color: #ff6b6b !important;
+}
+
+.square .legal-dot {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.2);
+    pointer-events: none;
+}
+
+.square .legal-capture {
+    position: absolute;
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    border: 4px solid rgba(0, 0, 0, 0.2);
+    background: transparent;
+    pointer-events: none;
+}
+
+.square:hover {
+    opacity: 0.85;
+}
+
+#status-bar {
+    margin-top: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    min-height: 24px;
+}
+
+#promotion-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+#promotion-dialog {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    text-align: center;
+}
+
+#promotion-dialog h3 {
+    margin-bottom: 12px;
+    font-size: 18px;
+    color: #333;
+}
+
+.promotion-pieces {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.promotion-piece {
+    width: 64px;
+    height: 64px;
+    font-size: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    background: #f9f9f9;
+    transition: background-color 0.15s, border-color 0.15s;
+}
+
+.promotion-piece:hover {
+    background: #e0e0e0;
+    border-color: #999;
+}
+
+#game-over-overlay {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 500;
+    justify-content: center;
+    align-items: center;
+}
+
+#game-over-text {
+    background: white;
+    padding: 24px 40px;
+    border-radius: 8px;
+    font-size: 22px;
+    font-weight: 700;
+    color: #333;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.rank-label, .file-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #666;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
